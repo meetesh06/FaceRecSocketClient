@@ -12,6 +12,9 @@
 <script src="build/tracking-min.js"></script>
 <script src="build/data/face-min.js"></script>
 <style type="text/css">
+	body {
+		background-color: #c0c0c0;	
+	}
 	#my_camera_holder {
 	  margin: 0 auto;
 	}
@@ -22,13 +25,12 @@
 	}
 
 	#video {
-	  width:100%;
-	  /* height:300px; */
+	  	width:80%;
+		margin: 6px;
 	}
 
 	#canvas {
-		width:400px;
-		height:300px;
+		width:80%;
 	}
 
 </style>
@@ -39,7 +41,7 @@
 	<header>
 		<div class="navbar-fixed">
 			<nav>
-				<div class="nav-wrapper deep-purple darken-4">
+				<div class="nav-wrapper red darken-2">
 					<a href="#" class="brand-logo">Logo</a>
 					<ul id="nav-mobile" class="right hide-on-med-and-down">
 						<li>
@@ -58,11 +60,13 @@
 	</header>
 	<div class="container" style="margin-top: 8px">
 		<div class="row">
-			<div class="col s12 z-depth-2 deep-purple lighten-5">
+			<div class="col s12 z-depth-2 black waves-effect waves-red">
 				<div class="col s12">
-					<video class="curve_me" id="video" preload autoplay loop muted></video>
-					<canvas hidden id="canvas" width="640" height="480"></canvas>
-
+					<div style="text-align: center">
+						<video class="curve_me" id="video" preload autoplay loop muted></video>
+						<canvas hidden id="canvas" width="640" height="480"></canvas>		
+					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -75,29 +79,22 @@
 
 	</script>
 
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 	<script type="text/javascript" src="js/jquery.js"></script>
-
-	<!-- <script type="text/javascript" src="js/webcam.min.js"></script> -->
-
-
 	<script type="text/javascript" src="js/index.js"></script>
 	<!--JavaScript at end of body for optimized loading-->
 	<script type="text/javascript" src="js/materialize.min.js"></script>
 	<script language="JavaScript">
 		var loading = false;
-		var socket = io('http://172.16.17.98:7190/');
+		var socket = io('http://localhost:7190/');
 		socket.on('connect', function(data){
 			console.log("Connected");
-			// console.log(data);
-			// M.toast({ html: "Connected to the image server", displayLength: 1000 });
 		});
 
 		socket.on('disconnect', function(){
 			console.log("Disconnected");
 		});
 		
-		socket.on('completed', function(){
+		socket.on('completed', function(error){
 			loading = false;
 		});
 		window.onload = function () {
@@ -114,8 +111,7 @@
 			tracker.on('track', function (event) {
 				if(loading) return;
 				event.data.forEach(function (rect) {
-					M.toast({ html: "Face detected please wait", displayLength: 1000 });
-					//draw image to canvas. scale to target dimensions
+					M.toast({ html: "Face detected please wait", displayLength: 300 });
 					
 					var canvas = document.getElementById('canvas');
 					var ctx = canvas.getContext('2d');
@@ -125,29 +121,9 @@
 					
 					loading = true;
 					socket.emit('on-data', dataURI );
-
-					// send_image(dataURI);
 				});
 			});
 		};
-
-
-		function send_image(raw_image_data) {
-			loading = true;
-			$.ajax({
-				url: "/process-image",
-				type: "post",
-				data: { image: raw_image_data },
-				success: function(result) {
-					M.toast("Welcome Dope");					
-				}
-				
-			}).done(function() {
-				loading = true;
-			});
-
-		}
-	        
 
 	</script>
 </body>
