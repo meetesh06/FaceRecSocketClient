@@ -119,8 +119,10 @@
 					ctx.drawImage(video, 0, 0);
 					var dataURI = canvas.toDataURL('image/jpeg');
 					
+					console.log(dataURI);
+
 					loading = true;
-					socket.emit('on-data', dataURI );
+					socket.emit('on-data', dataURI.replace(/^data\:image\/\w+\;base64\,/, '') );
 				});
 			});
 		};
