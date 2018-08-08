@@ -94,7 +94,8 @@
 			console.log("Disconnected");
 		});
 		
-		socket.on('completed', function(error){
+		socket.on('completed', function(mssg){
+			M.toast({ html: mssg, displayLength: 300 });
 			loading = false;
 		});
 		window.onload = function () {
