@@ -13,70 +13,60 @@
 <script src="build/data/face-min.js"></script>
 <style type="text/css">
 	body {
-		background-color: #c0c0c0;	
+		background-color: #c0c0c0;
 	}
+
 	#my_camera_holder {
-	  margin: 0 auto;
+		margin: 0 auto;
 	}
 
 	.curve_me {
-	  border-radius: 6px;
-	  overflow: hidden;
+		border-radius: 6px;
+		overflow: hidden;
 	}
 
 	#video {
-	  	width:80%;
-		margin: 6px;
+		/* position: absolute; */
+		/* width:80%; */
+		/* margin: 6px; */
 	}
 
 	#canvas {
-		width:80%;
+		/* position: absolute; */
+		/* margin: 0 auto; */
 	}
-
 </style>
 <title>FaceRecognition</title>
 </head>
 
 <body>
-	<header>
-		<div class="navbar-fixed">
-			<nav>
-				<div class="nav-wrapper red darken-2">
-					<a href="#" class="brand-logo">Logo</a>
-					<ul id="nav-mobile" class="right hide-on-med-and-down">
-						<li>
-							<a href="">NavItem1</a>
-						</li>
-						<li>
-							<a href="">NavItem1</a>
-						</li>
-						<li>
-							<a href="">NavItem1</a>
-						</li>
-					</ul>
-				</div>
-			</nav>
-		</div>
-	</header>
-	<div class="container" style="margin-top: 8px">
+	<div style="text-align: center; ">
+		<video class="curve_me" width="640" height="400" id="video" preload autoplay loop muted></video>
+		<canvas hidden id="canvas" width="640" height="400"></canvas>
+	</div>
+	<div style="display: flex; position: static; bottom: 5px; justify-content: center">
+		<a   id="subBtn" class="btn-floating btn-large waves-effect waves-light  scale-transition scale-in red">
+			<i class="material-icons">add</i>
+		</a>
+	
+	</div>
+
+	<div style="visibility: hidden" class="progress" id="loader">
+			<div class="indeterminate green "></div>
+	</div>	
+
+	<!-- <div class="container" style="margin-top: 8px">
 		<div class="row">
 			<div class="col s12 z-depth-2 black waves-effect waves-red">
 				<div class="col s12">
-					<div style="text-align: center">
-						<video class="curve_me" id="video" preload autoplay loop muted></video>
-						<canvas hidden id="canvas" width="640" height="480"></canvas>		
-					</div>
 					
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<script type="text/javascript" src="js/socket.io.js"></script>
 	<script>
-
-
-
 	</script>
 
 	<script type="text/javascript" src="js/jquery.js"></script>
@@ -86,17 +76,17 @@
 	<script language="JavaScript">
 		var loading = false;
 		var socket = io('http://localhost:7190/');
-		socket.on('connect', function(data){
+		socket.on('connect', function (data) {
 			console.log("Connected");
 		});
 
-		socket.on('disconnect', function(){
+		socket.on('disconnect', function () {
 			console.log("Disconnected");
 		});
-		
-		socket.on('completed', function(mssg){
-			M.toast({ html: mssg, displayLength: 300 });
-			loading = false;
+
+		socket.on('completed', function (mssg) {
+			play(mssg);
+
 		});
 		window.onload = function () {
 			var video = document.getElementById('video');
@@ -109,23 +99,36 @@
 				camera: true
 			});
 
-			tracker.on('track', function (event) {
-				if(loading) return;
-				event.data.forEach(function (rect) {
-					M.toast({ html: "Face detected please wait", displayLength: 300 });
-					
-					var canvas = document.getElementById('canvas');
-					var ctx = canvas.getContext('2d');
 
-					ctx.drawImage(video, 0, 0);
-					var dataURI = canvas.toDataURL('image/jpeg');
-				
-					loading = true;
-					socket.emit('on-data', dataURI.replace(/^data\:image\/\w+\;base64\,/, '') );
+			function play(mssg) {
+				M.toast({
+					html: mssg,
+					displayLength: 300
 				});
-			});
-		};
+				loading = false;
+				$(".curve_me").show();
+				$("#canvas").attr("hidden", "true");
+				$("#loader").css("visibility", "hidden");
+        $("#subBtn").removeClass('scale-out');	
+        $("#subBtn").addClass('scale-in');
+			}
+			// tracker.on('track', function (event) {
+			// 	if(loading) return;
+			// 	event.data.forEach(function (rect) {
+			// 		M.toast({ html: "Face detected please wait", displayLength: 300 });
 
+
+			// 		var canvas = document.getElementById('canvas');
+			// 		var ctx = canvas.getContext('2d');
+
+			// 		ctx.drawImage(video, 0, 0);
+			// 		var dataURI = canvas.toDataURL('image/jpeg');
+
+			// 		loading = true;
+			// 		socket.emit('on-data', dataURI.replace(/^data\:image\/\w+\;base64\,/, '') );//call
+			// 	});
+			// });
+		};
 	</script>
 </body>
 

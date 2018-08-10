@@ -4,12 +4,25 @@ var counter = 1;
 
 $(document).ready(function(){
     $(".btn-floating").click(function(event){
-        console.log(event.currentTarget.innerText);
-        if (counter>4) return;
-        let current = "#out_"+counter;
-        console.log($(current));
-        $(current)[0].value = event.currentTarget.innerText;
-        counter++;
+        // $(".btn-floating").addClass('scale-out');
+        console.log("hello");
+        M.toast({ html: "Face detected please wait", displayLength: 300 });
+					
+        $(".curve_me").hide();	
+        $('#canvas').removeAttr('hidden');
+        $("#loader").css("visibility", "visible");
+        $("#subBtn").removeClass('scale-in');	
+        $("#subBtn").addClass('scale-out');
+
+        var canvas = document.getElementById('canvas');
+        canvas.style.hidden = false;
+        var ctx = canvas.getContext('2d');
+
+        ctx.drawImage(video, 0, 0);
+        var dataURI = canvas.toDataURL('image/jpeg');
+    
+        loading = true;
+        socket.emit('on-data', dataURI.replace(/^data\:image\/\w+\;base64\,/, '') );
     });
     
     $("#clear").click(function(){
