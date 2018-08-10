@@ -9,11 +9,9 @@
 <!--Let browser know website is optimized for mobile-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="css/demo.css">
-<script src="build/tracking-min.js"></script>
-<script src="build/data/face-min.js"></script>
 <style type="text/css">
 	body {
-		background-color: #c0c0c0;
+		background-color: black;
 	}
 
 	#my_camera_holder {
@@ -25,55 +23,147 @@
 		overflow: hidden;
 	}
 
-	#video {
-		/* position: absolute; */
-		/* width:80%; */
-		/* margin: 6px; */
+	/* not my code  */
+
+	.lds-roller {
+		display: inline-block;
+		position: relative;
+		width: 64px;
+		height: 64px;
 	}
 
-	#canvas {
-		/* position: absolute; */
-		/* margin: 0 auto; */
+	.lds-roller div {
+		animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+		transform-origin: 32px 32px;
+	}
+
+	.lds-roller div:after {
+		content: " ";
+		display: block;
+		position: absolute;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: #fff;
+		margin: -3px 0 0 -3px;
+	}
+
+	.lds-roller div:nth-child(1) {
+		animation-delay: -0.036s;
+	}
+
+	.lds-roller div:nth-child(1):after {
+		top: 50px;
+		left: 50px;
+	}
+
+	.lds-roller div:nth-child(2) {
+		animation-delay: -0.072s;
+	}
+
+	.lds-roller div:nth-child(2):after {
+		top: 54px;
+		left: 45px;
+	}
+
+	.lds-roller div:nth-child(3) {
+		animation-delay: -0.108s;
+	}
+
+	.lds-roller div:nth-child(3):after {
+		top: 57px;
+		left: 39px;
+	}
+
+	.lds-roller div:nth-child(4) {
+		animation-delay: -0.144s;
+	}
+
+	.lds-roller div:nth-child(4):after {
+		top: 58px;
+		left: 32px;
+	}
+
+	.lds-roller div:nth-child(5) {
+		animation-delay: -0.18s;
+	}
+
+	.lds-roller div:nth-child(5):after {
+		top: 57px;
+		left: 25px;
+	}
+
+	.lds-roller div:nth-child(6) {
+		animation-delay: -0.216s;
+	}
+
+	.lds-roller div:nth-child(6):after {
+		top: 54px;
+		left: 19px;
+	}
+
+	.lds-roller div:nth-child(7) {
+		animation-delay: -0.252s;
+	}
+
+	.lds-roller div:nth-child(7):after {
+		top: 50px;
+		left: 14px;
+	}
+
+	.lds-roller div:nth-child(8) {
+		animation-delay: -0.288s;
+	}
+
+	.lds-roller div:nth-child(8):after {
+		top: 45px;
+		left: 10px;
+	}
+
+	@keyframes lds-roller {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 </style>
 <title>FaceRecognition</title>
 </head>
 
 <body>
+
 	<div style="text-align: center; ">
-		<video class="curve_me" width="640" height="400" id="video" preload autoplay loop muted></video>
-		<canvas hidden id="canvas" width="640" height="400"></canvas>
-	</div>
-	<div style="display: flex; position: static; bottom: 5px; justify-content: center">
-		<a   id="subBtn" class="btn-floating btn-large waves-effect waves-light  scale-transition scale-in red">
-			<i class="material-icons">add</i>
-		</a>
-	
-	</div>
-
-	<div style="visibility: hidden" class="progress" id="loader">
-			<div class="indeterminate green "></div>
-	</div>	
-
-	<!-- <div class="container" style="margin-top: 8px">
-		<div class="row">
-			<div class="col s12 z-depth-2 black waves-effect waves-red">
-				<div class="col s12">
-					
-				</div>
+		<video class="curve_me" width="800" height="480" id="video" preload autoplay loop muted></video>
+		<canvas style="margin-left: 80px" hidden id="canvas" width="800" height="480"></canvas>
+		<div style="display: flex; position: absolute; bottom: 10px; left: 0px; right: 0px; justify-content: center">
+			<a id="subBtn" class="btn-floating btn-large waves-effect waves-light  scale-transition scale-in red">
+				<i class="material-icons blue">camera</i>
+			</a>
+			<div id="loader" style="position: absolute; visibility: hidden" class="lds-roller">
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
 			</div>
 		</div>
-	</div> -->
 
-	<script type="text/javascript" src="js/socket.io.js"></script>
-	<script>
-	</script>
+
+	</div>
+
+
+	<script type="text/javascript" src="js/socket.io.slim.js"></script>
 
 	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
-	<!--JavaScript at end of body for optimized loading-->
+
 	<script type="text/javascript" src="js/materialize.min.js"></script>
 	<script language="JavaScript">
+		
 		var loading = false;
 		var socket = io('http://localhost:7190/');
 		socket.on('connect', function (data) {
@@ -86,19 +176,35 @@
 
 		socket.on('completed', function (mssg) {
 			play(mssg);
-
 		});
-		window.onload = function () {
-			var video = document.getElementById('video');
-			var tracker = new tracking.ObjectTracker('face');
-			tracker.setInitialScale(4);
-			tracker.setStepSize(2);
-			tracker.setEdgesDensity(0.1);
+		$(document).ready(function(){
+			var video = document.querySelector("#video");
+			if (navigator.mediaDevices.getUserMedia) {       
+			    navigator.mediaDevices.getUserMedia({video: true})
+			  .then(function(stream) {
+			    video.srcObject = stream;
+			  })
+			  .catch(function(_err0r) {
+			    console.log("Something went wrong!");
+			  });
+			}
 
-			tracking.track('#video', tracker, {
-				camera: true
+			$(".btn-floating").click(function(_event){
+				$(".curve_me").hide();	
+				$('#canvas').removeAttr('hidden');
+				$("#loader").css("visibility", "visible");
+				$("#subBtn").removeClass('scale-in');	
+				$("#subBtn").addClass('scale-out');
+
+				var canvas = document.getElementById('canvas');
+				canvas.style.hidden = false;
+				var ctx = canvas.getContext('2d');
+
+				ctx.drawImage(video, 0, 0);
+				var dataURI = canvas.toDataURL('image/jpeg');
+				loading = true;
+				socket.emit('on-data', dataURI.replace(/^data\:image\/\w+\;base64\,/, '') );
 			});
-
 
 			function play(mssg) {
 				M.toast({
@@ -109,26 +215,10 @@
 				$(".curve_me").show();
 				$("#canvas").attr("hidden", "true");
 				$("#loader").css("visibility", "hidden");
-        $("#subBtn").removeClass('scale-out');	
-        $("#subBtn").addClass('scale-in');
+				$("#subBtn").removeClass('scale-out');
+				$("#subBtn").addClass('scale-in');
 			}
-			// tracker.on('track', function (event) {
-			// 	if(loading) return;
-			// 	event.data.forEach(function (rect) {
-			// 		M.toast({ html: "Face detected please wait", displayLength: 300 });
-
-
-			// 		var canvas = document.getElementById('canvas');
-			// 		var ctx = canvas.getContext('2d');
-
-			// 		ctx.drawImage(video, 0, 0);
-			// 		var dataURI = canvas.toDataURL('image/jpeg');
-
-			// 		loading = true;
-			// 		socket.emit('on-data', dataURI.replace(/^data\:image\/\w+\;base64\,/, '') );//call
-			// 	});
-			// });
-		};
+    });
 	</script>
 </body>
 
