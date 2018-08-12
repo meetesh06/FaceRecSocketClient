@@ -12,6 +12,7 @@
 <style type="text/css">
 	body {
 		background-color: black;
+		overflow: hidden;
 	}
 
 	#my_camera_holder {
@@ -135,7 +136,7 @@
 <body>
 
 	<div style="text-align: center; ">
-		<video class="curve_me" width="800" height="480" id="video" preload autoplay loop muted></video>
+		<video class="curve_me" width="750" height="480" id="video" preload autoplay loop muted></video>
 		<canvas style="margin-left: 80px" hidden id="canvas" width="340" height="255"></canvas>
 		<div style="display: flex; position: absolute; bottom: 10px; left: 0px; right: 0px; justify-content: center">
 			<a id="subBtn" class="btn-floating btn-large waves-effect waves-light  scale-transition scale-in red">
@@ -197,7 +198,7 @@
 				var ctx = canvas.getContext('2d');
 
 				ctx.drawImage(video, 0, 0);
-				ctx.drawImage(video,0,0,800,480,0,0,430,260);
+				ctx.drawImage(video,0,0,750,480,0,0,430,260);
 				var dataURI = canvas.toDataURL('image/jpeg');
 				loading = true;
 				socket.emit('on-data', dataURI.replace(/^data\:image\/\w+\;base64\,/, '') );
@@ -215,7 +216,7 @@
 				$("#subBtn").removeClass('scale-out');
 				$("#subBtn").addClass('scale-in');
 			}
-			
+
 			socket.on('completed', function (mssg) {
 				play(mssg);
 			});
