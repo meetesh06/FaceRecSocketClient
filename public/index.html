@@ -173,10 +173,6 @@
 		socket.on('disconnect', function () {
 			console.log("Disconnected");
 		});
-
-		socket.on('completed', function (mssg) {
-			play(mssg);
-		});
 		$(document).ready(function(){
 			var video = document.querySelector("#video");
 			if (navigator.mediaDevices.getUserMedia) {       
@@ -219,6 +215,10 @@
 				$("#subBtn").removeClass('scale-out');
 				$("#subBtn").addClass('scale-in');
 			}
+			
+			socket.on('completed', function (mssg) {
+				play(mssg);
+			});
     });
 	</script>
 </body>
