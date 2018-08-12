@@ -166,13 +166,16 @@
 	<script language="JavaScript">
 		
 		var loading = false;
+		var connected = false;
 		var socket = io('http://localhost:7190/');
 		socket.on('connect', function (data) {
 			console.log("Connected");
+			connected = true;
 		});
 
 		socket.on('disconnect', function () {
 			console.log("Disconnected");
+			connected = false;
 		});
 		$(document).ready(function(){
 			var video = document.querySelector("#video");
@@ -187,6 +190,10 @@
 			}
 
 			$(".btn-floating").click(function(_event){
+				if(!connected) return M.toast({
+					html: "Please wait, software is still loading face data",
+					displayLength: 2000
+				});
 				$(".curve_me").hide();	
 				$('#canvas').removeAttr('hidden');
 				$("#loader").css("visibility", "visible");
