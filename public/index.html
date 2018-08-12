@@ -207,7 +207,7 @@
 			function play(mssg) {
 				M.toast({
 					html: mssg,
-					displayLength: 300
+					displayLength: 3000
 				});
 				loading = false;
 				$(".curve_me").show();
@@ -218,6 +218,7 @@
 			}
 
 			socket.on('completed', function (mssg) {
+				if(!mssg || mssg === null) mssg = "Please Try Again"
 				play(mssg);
 			});
     });
