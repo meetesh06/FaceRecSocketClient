@@ -134,8 +134,17 @@
 </head>
 
 <body>
-
+	
 	<div style="text-align: center; ">
+				  <div id="modal1" class="modal">
+					<div class="modal-content">
+						<img src="./orah.png" style="width: 100px; height: 100px;">
+					  <h4 style="font-weight: 200">Team Orah </h4>
+					  <p><ul> <li>Vivek Rajpoot  1/15/FET/BCB/1/016</li> <li>Meetesh Mehta  1/16/FET/BCS/1/077</li> <li>Sarthak Agrawal  1/16/FET/BCS/1/076</li> <li>Rhitabrat Pokharel  1/16/FET/BCS/1/100</li>  <br> </ul>
+					</p>
+					<p style="font-size: 20px">Under mentorship of :- <b>Charu Virmani</b></p>
+					</div>
+				  </div>
 		<video class="curve_me" width="750" height="480" id="video" preload autoplay loop muted></video>
 		<canvas style="margin-left: 80px" hidden id="canvas" width="340" height="255"></canvas>
 		<div style="display: flex; position: absolute; bottom: 10px; left: 0px; right: 0px; justify-content: center">
@@ -147,13 +156,14 @@
 				<div></div>
 				<div></div>
 				<div></div>
-				<div></div>
+				<div></div>		
 				<div></div>
 				<div></div>
 				<div></div>
 			</div>
 		</div>
 
+		<div style="display: flex; position: absolute; bottom: 410px; left: 10px; right: 0px; justify-content: left"> <button data-target="modal1" class="btn-floating btn-large modal-trigger"><i style="font-size: 40px;" class="material-icons blue">face</i></button></div>
 
 	</div>
 
@@ -178,6 +188,9 @@
 			connected = false;
 		});
 		$(document).ready(function(){
+			console.log("ready");
+			$('.modal').modal();
+			$('.sidenav').sidenav();
 			var video = document.querySelector("#video");
 			if (navigator.mediaDevices.getUserMedia) {       
 			    navigator.mediaDevices.getUserMedia({video: true})
@@ -189,7 +202,7 @@
 			  });
 			}
 
-			$(".btn-floating").click(function(_event){
+			$("#subBtn").click(function(_event){
 				if(!connected) return M.toast({
 					html: "Please wait, software is still loading face data",
 					displayLength: 2000
